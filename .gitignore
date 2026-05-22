@@ -1,0 +1,10 @@
+# Local .terraform directories containing heavy provider binaries
+**/.terraform/*
+
+# Ignore state files if you happen to create them locally
+*.tfstate
+*.tfstate.*
+
+# Ignore sensitive variable files
+*.tfvars
+*.tfvars.json

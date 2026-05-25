@@ -8,8 +8,6 @@ terraform {
     }
 
 
-# Configure standard remote state management
-
     backend "s3" {
         bucket         = "smartstack-tf-state-bucket" #change to the bucket name
         key            = "environments/production/terraform.tfstate"

@@ -37,6 +37,34 @@ module "vpc" {
   }
 }
 
+# Dedicated Security group 
+resource "aws_security_group" "vpc_endpoints" {
+  name        = "${var.vpc_name}-endpoints-sg"
+  description = "Security group for VPC endpoints in isolated EKS network"
+  vpc_id      = module.vpc.vpc_id
+
+  # Inbound rule: Allow HTTPS (443) traffic from anywhere inside the VPC CIDR
+  ingress {
+    description = "Allow HTTPS from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [var.cidr_block]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.vpc_name}-endpoints-sg"
+  }
+}
+
 # S3 Gateway Endpoint
 resource "aws_vpc_endpoint" "s3" {
     vpc_id = module.vpc.vpc_id
@@ -52,7 +80,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.vpc.private_subnets
   private_dns_enabled = true
-  security_group_ids  = [var.eks_node_security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
 }
 
 # 3. ECR Docker Interface Endpoint (Handles the actual docker pull layer binary streams)
@@ -62,7 +90,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.vpc.private_subnets
   private_dns_enabled = true
-  security_group_ids  = [var.eks_node_security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
 }
 
 # 4. EC2 API Endpoint (Crucial: Required by the EKS nodes to join the cluster without a NAT)
@@ -72,6 +100,15 @@ resource "aws_vpc_endpoint" "ec2" {
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.vpc.private_subnets
   private_dns_enabled = true
-  security_group_ids  = [var.eks_node_security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
 }
 
+# 5. STS Endpoint (Required for IAM role assumption in isolated subnets)
+resource "aws_vpc_endpoint" "sts" {
+  vpc_id              = module.vpc.vpc_id
+  service_name        = "com.amazonaws.ap-southeast-1.sts"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = module.vpc.private_subnets
+  private_dns_enabled = true
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+}

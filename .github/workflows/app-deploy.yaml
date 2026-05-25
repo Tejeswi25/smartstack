@@ -1,0 +1,23 @@
+name: "4. Application Deployment Pipeline(Helm)"
+on:
+  push: 
+    branches: 
+      - main 
+    paths:
+      - 'charts/**' # Triggers if your helm chart configuration change
+      - 'api/**'
+env: 
+  AWS_REGION: ap-southeast-1
+  ECR_REPOSITORY: python-api 
+  EKS_CLUSTER_NAME: 
+  HELM_RELEASE_NAME: 
+  NAMESPACE: 
+jobs:
+  helm-deploy: 
+    name: "Deploy to EKS via Helm"
+    runs-on: ubuntu-latest 
+    steps: 
+      - name: Checkout Code 
+        uses: actions/checkout@v4 
+      # Step
+  

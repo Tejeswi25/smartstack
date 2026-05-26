@@ -17,3 +17,7 @@ output "oidc_provider_arn" {
   description = "The ARN of the OpenID Connect identity provider for IAM Service Accounts mapping"
   value       = module.eks.oidc_provider_arn
 }
+
+output "cluster_security_group_id" {
+  value = module.eks.cluster_security_group_id
+}

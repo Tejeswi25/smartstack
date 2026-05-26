@@ -44,7 +44,7 @@ jobs:
       - name: Helm Upgrade or Install 
         env: 
           ECR_REGISTRY: ${{ steps.aws-info.outputs.registry }} 
-          DEPLOY_TAG: ${{ github.sha }}
+          DEPLOY_TAG: "latest"
         run: |
           helm upgrade --install ${{ env.HELM_RELEASE_NAME }} ./charts/core-app \
             --namespace ${{ env.NAMESPACE }} \

@@ -72,7 +72,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy" {
 
 resource "aws_key_pair" "deployer" {
   key_name = "my-new-ssh-key"
-  public_key = file("C:/Users/pteju/.ssh/id_rsa.pub")
+  public_key = file("${path.module}/id_rsa.pub")
 }
 # -----------------------------------------------------------------
 # EC2 Instance Deployment Module

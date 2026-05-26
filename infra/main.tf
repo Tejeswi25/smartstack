@@ -86,7 +86,7 @@ module "ec2_jumpbox" {
   instance_type          = "t3.micro" # Lightweight, cost-effective for a jump box
 
   associate_public_ip_address = true 
-  key_name                    = "aws_key_pair.deployer.key_name"
+  key_name                    = aws_key_pair.deployer.key_name
 
   # Dynamically fetch the first public subnet ID created by your VPC module
   subnet_id              = module.network_layer.public_subnets[0]

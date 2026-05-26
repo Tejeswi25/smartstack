@@ -117,3 +117,13 @@ module "ec2_jumpbox" {
     Role        = "bastion-jumpbox"
   }
 }
+
+resource "aws_security_group_rule" "allow_jumpbox_to_eks" {
+  type = "ingress"
+  from_port = 443
+  to_port = 443
+  protocol = "tcp"
+  security_group_id = module.compute.node_security_group_id
+  source_security_group_id = resource.aws_security_group.jumpbox_sg.id
+  description = "Allow kubectl traffic from admin jump box"
+}

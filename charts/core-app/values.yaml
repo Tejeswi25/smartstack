@@ -1,0 +1,34 @@
+replicaCount: 2
+
+image:
+  repository: "" # Overridden by GHA pipeline
+  tag: ""        # Overridden by GHA pipeline
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: "core-app-sa"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5000 # 👈 Updated from 8080 to 5000 to match your Flask app script
+
+# 💡 Add your environment variables here so your app knows where to find Redis & Postgres
+env:
+  APP_ENV: "production"
+  REDIS_HOST: "redis-service-name"      # Replace with your actual Redis endpoint or service name
+  REDIS_PORT: "6379"
+  DB_HOST: "postgres-service-name"    # Replace with your actual database endpoint or service name
+  DB_PORT: "5432"
+  POSTGRES_USER: "adminuser"
+  POSTGRES_DB: "appdb"
+  POSTGRES_PASSWORD: "production-secret-pass" # Note: In production, use Kubernetes secrets for this!
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi

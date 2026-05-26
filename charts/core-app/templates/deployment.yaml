@@ -1,0 +1,57 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: core-app 
+  labels: 
+    name: core-app 
+spec: 
+  replicas: {{ .Values.replicaCount }}
+  selector: 
+    matchLabels: 
+      app: core-app 
+  template: 
+    metadata: 
+      labels: 
+        app: core-app 
+    spec: 
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers: 
+        - name: api-container 
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports: 
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP 
+          env: 
+            - name: APP_ENV 
+              value: {{ .Values.env.APP_ENV | quote }}
+            - name: REDIS_HOST
+              value: {{ .Values.env.REDIS_HOST | quote }}
+            - name: REDIS_PORT
+              value: {{ .Values.env.REDIS_PORT | quote }}
+            - name: DB_HOST
+              value: {{ .Values.env.DB_HOST | quote }}
+            - name: DB_PORT
+              value: {{ .Values.env.DB_PORT | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.env.POSTGRES_USER | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.env.POSTGRES_DB | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.env.POSTGRES_PASSWORD | quote }}
+          livenessProbe: 
+            httpGet: 
+              path: /
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 10 
+            periodSeconds: 15 
+          readinessProbe: 
+            httpGet: 
+              path: /
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 5 
+            periodSeconds: 10 
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }} 
+            

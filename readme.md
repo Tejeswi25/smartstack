@@ -34,3 +34,16 @@ smartstack/
         ├── main.tf
         ├── variables.tf
         └── outputs.tf
+=======================================================
+[ User/Client ] 
+       │
+       ▼
+ ┌───────────┐      (Tier 1: Web Interface)
+ │ Flask API │ ───► Returns basic app information
+ └─────┬─────┘
+       │
+       ├─► [ Redis Cache ]       (Tier 2: Fast Memory Storage)
+       │   Increments a real-time hit counter
+       │
+       └─► [ PostgreSQL DB ]     (Tier 3: Relational Database)
+           Queries the engine's core software version

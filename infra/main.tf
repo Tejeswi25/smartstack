@@ -72,7 +72,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy" {
 
 resource "aws_key_pair" "deployer" {
   key_name = "my-new-ssh-key"
-  public_key = "sh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDWTHk1cDN4pDhzjUek5rQn+43Fs5lKbN1IYmPLHSik2sDq2glWldYqtuXmML/tvkjsHTuyrJMJmNBGUtKxB8qUOceEqPh27/1OW9b7PUC3SO8gJD0DXOHJwZYdt6MS9XupQjGSglxsSyuNKzZEed6Nfzz2bqW4f4VIxEhGo8T9zjUiji3xgCOdhdKvnTN52nnyRLaNsHB9fgpwSAj4n4Uf3D6/3Rid+dscURcWkyIXCyTeve0lU+3xsxbxNbT3liJ/LUPohH+dlb62+4WrBG5JMzdLUn4wjH6pS7engz8tHU0qmdsnkOrFBNp1n/1iSUXlZJ9f6dm3w/aSDyxPHr87ziXKSWajUi/wanJCKhsycrj5iDm2F8YLglCl77bF8ZBhCc5Mt0iN0j7T4I0LsbsmqinqRh4fEctVhqiAd/8seYzpD/g8mEadryuuzg79tJYoe1g1BG7XKeq8DeoMXu48AthEHjas8LCOkDXjLnRk3ZQaX3J70xsAx9wVrBUMf60= pteju@LAPTOP-S3M8EN72"
+  public_key = file("C:/Users/pteju/.ssh/id_rsa.pub")
 }
 # -----------------------------------------------------------------
 # EC2 Instance Deployment Module
